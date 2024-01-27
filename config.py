@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import SecretStr
+from typing import List, Optional
 
 
 class Settings(BaseSettings):
@@ -9,6 +10,10 @@ class Settings(BaseSettings):
     DB_PASS: str
     DB_NAME: str
     BOT_TOKEN: SecretStr
+    ADMIN_IDS: str
+
+    def get_admin_ids_list(self) -> List[int]:
+        return [int(admin_id) for admin_id in self.ADMIN_IDS.split(",") if admin_id.strip().isdigit()]
 
     @property
     def DATABASE_URL(self):

@@ -23,7 +23,8 @@ class User(Base):
     language: Mapped[Language] = mapped_column(default=Language.RU)
 
     bookmarks: Mapped[list["Bookmark"]] = relationship(
-        back_populates="bookmark",
+        'Bookmark',
+        back_populates="user",
     )
 
 
@@ -38,7 +39,10 @@ class Place(Base):
     address: Mapped[Optional[str]]
     image_id: Mapped[Optional[str]]
 
-    bookmarks: Mapped['Bookmark'] = relationship(back_populates="place")
+    bookmarks: Mapped['Bookmark'] = relationship(
+        'Bookmark',
+        back_populates="place"
+    )
 
 
 class Bookmark(Base):
@@ -48,8 +52,12 @@ class Bookmark(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     place_id: Mapped[int] = mapped_column(ForeignKey("places.id"))
 
-    user: Mapped["User"] = relationship(back_populates="bookmarks")
-    place: Mapped["Place"] = relationship(back_populates="bookmarks")
+    user: Mapped["User"] = relationship(
+        "User", back_populates="bookmarks"
+    )
+    place: Mapped["Place"] = relationship(
+        "Place", back_populates="bookmarks"
+    )
 
 
 
