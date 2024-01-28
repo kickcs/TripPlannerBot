@@ -49,7 +49,6 @@ async def admin_add_description_handler(message: Message, message_input: Message
         return
     dialog_manager.dialog_data['desc'] = message.text
     await dialog_manager.next()
-    print(dialog_manager.dialog_data)
 
 
 async def on_input_photo(message: Message, widget: MessageInput,

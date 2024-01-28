@@ -15,6 +15,7 @@ from . import states
 
 ID_STUB_SCROLL = "stub_scroll"
 
+
 async def places_category_getter(dialog_manager: DialogManager, **_kwargs):
     categories = await PlaceORM.get_category_places()
     return {'categories': categories}
@@ -37,6 +38,11 @@ async def on_subcategory_selected(callback: CallbackQuery, widget: Any,
     await dialog_manager.next()
 
 
+async def on_back_selected(callback: CallbackQuery, widget: Any,
+                           dialog_manager: DialogManager):
+    await dialog_manager.find(ID_STUB_SCROLL).set_page(0)
+
+
 async def places_getter(dialog_manager: DialogManager, **_kwargs):
     subcategory = dialog_manager.dialog_data['subcategory']
     number_of_page = await PlaceORM.count_places_by_subcategory(subcategory)
@@ -50,9 +56,10 @@ async def places_getter(dialog_manager: DialogManager, **_kwargs):
         'photo': image
     }
 
+
 places_main_menu = Window(
     Const(text='Выбор Города TODO'),
-    Next(text=Const('Далее'), id='places_next'),
+    Next(text=Const('Ташкент'), id='places_next'),
     MAIN_MENU_BUTTON,
     state=states.Places.PLACES_MAIN
 )
@@ -98,13 +105,12 @@ places_menu = Window(
     NumberedPager(
         scroll=ID_STUB_SCROLL,
     ),
-    Back(text=Const('Назад'), id='places_back'),
+    Back(text=Const('Назад'), id='places_back', on_click=on_back_selected),
     MAIN_MENU_BUTTON,
     getter=places_getter,
     preview_data=places_getter,
     state=states.Places.PLACES_PLACE
 )
-
 
 places_dialog = Dialog(
     places_main_menu,

@@ -27,7 +27,7 @@ main_dialog = Dialog(
             text=Const("Admin Panel"),
             id="admin_panel",
             state=states.Admin.ADMIN_MAIN,
-            #when='False'
+            when='False'
         ),
         Start(
             text=Const("Places"),
