@@ -83,3 +83,17 @@ class PlaceORM:
             result = await session.execute(stmt)
             places = result.fetchall()
             return places
+
+    @staticmethod
+    async def get_places_id_and_name():
+        async with async_session_factory() as session:  # Предполагается, что у вас уже есть async_session_factory
+            result = await session.execute(select(Place.id, Place.name))
+            places = result.fetchall()
+            return places
+
+    @staticmethod
+    async def delete_place_by_id(place_id: int):
+        async with async_session_factory() as session:
+            query = delete(Place).where(Place.id == int(place_id))
+            await session.execute(query)
+            await session.commit()

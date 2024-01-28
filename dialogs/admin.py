@@ -1,5 +1,5 @@
 from aiogram_dialog import Window, Dialog, DialogManager
-from aiogram_dialog.widgets.kbd import (Back, SwitchTo, Select, Group, Start, Button, Next)
+from aiogram_dialog.widgets.kbd import (Back, SwitchTo, Select, Group, Start, Button, Next, Column)
 from aiogram_dialog.widgets.text import Const, Format, Jinja
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog import ChatEvent
@@ -111,6 +111,18 @@ async def other_type_handler(message: Message, message_input: MessageInput,
                          'Пожалуйста, повторите попытку.')
 
 
+async def admin_delete_getter(dialog_manager: DialogManager, **_kwargs):
+    places = await PlaceORM.get_places_id_and_name()
+    return {'places': places}
+
+
+async def on_click_admin_delete(callback: CallbackQuery, widget: Any,
+                                dialog_manager: DialogManager, selected_item: int):
+    await PlaceORM.delete_place(selected_item)
+    await callback.answer("Запись удалена")
+    await dialog_manager.done()
+
+
 admin_main_menu = Window(
     Const("Админ панель, здесь вы можете добавить, удалить и редактировать места"),
     Group(
@@ -178,9 +190,19 @@ admin_add_complete = Window(
     getter=getter
 )
 
-# admin_delete = Window(
-#     Const('Выберите место, которое хотите удалить'),
-# )
+admin_delete = Window(
+    Const('Выберите место, которое хотите удалить'),
+    Column(Select(
+        Format('{item}'),
+        id='places',
+        item_id_getter=lambda item: item[0],
+        items='places',
+        on_click=on_click_admin_delete
+    )),
+    SwitchTo(text=Const("Назад"), id="back", state=states.Admin.ADMIN_MAIN),
+    state=states.Admin.ADMIN_DELETE,
+    getter=admin_delete_getter
+)
 
 admin_dialog = Dialog(
     admin_main_menu,
@@ -189,5 +211,6 @@ admin_dialog = Dialog(
     admin_add_name_place,
     admin_add_description,
     admin_add_image,
-    admin_add_complete
+    admin_add_complete,
+    admin_delete
 )

@@ -1,6 +1,6 @@
 from aiogram_dialog import Dialog, Window, LaunchMode, DialogManager
 from aiogram_dialog.widgets.kbd import Start
-from aiogram_dialog.widgets.text import Const
+from aiogram_dialog.widgets.text import Const, Jinja
 from aiogram import F
 
 from . import states
@@ -8,19 +8,26 @@ from . import states
 
 async def getter(dialog_manager: DialogManager, **_kwargs):
     tg_id = dialog_manager.middleware_data['event_from_user'].id
-
-    return {}
+    TEXT = (
+        'Этот бот поможет вам найти уникальные и увлекательные места для посещения в разных городах. Независимо от того, '
+        'ищете ли вы кафе с уютной атмосферой, запоминающиеся достопримечательности или тихие парки для прогулок, '
+        'здесь вы найдете что-то для себя.')
+    return {'TEXT': TEXT}
 
 
 main_dialog = Dialog(
     Window(
-        Const("Главное меню (в разработке)"),
-        # Start(),
+        Jinja('''
+<b>🌍 Приветствую в нашем боте-каталоге интересных мест!</b> 
+
+{{TEXT}}
+'''),
+
         Start(
             text=Const("Admin Panel"),
             id="admin_panel",
             state=states.Admin.ADMIN_MAIN,
-            # when=
+            #when='False'
         ),
         Start(
             text=Const("Places"),
