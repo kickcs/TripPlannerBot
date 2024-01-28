@@ -11,6 +11,7 @@ from aiogram.types import Message, ErrorEvent, ReplyKeyboardRemove
 from aiogram_dialog import DialogManager, setup_dialogs, StartMode, ShowMode
 from aiogram_dialog.api.exceptions import UnknownIntent
 
+import dialogs.states
 from config import settings
 from db.database import async_session_factory
 from middlewares.db import DbSessionMiddleware
@@ -18,6 +19,7 @@ from middlewares.db import DbSessionMiddleware
 from dialogs import states
 from dialogs.main import main_dialog
 from dialogs.admin import admin_dialog
+from dialogs.places import places_dialog
 from db.requests import UserORM
 
 logger = logging.getLogger(__name__)
@@ -67,7 +69,8 @@ async def main():
     dialog_router = Router()
     dialog_router.include_routers(
         main_dialog,
-        admin_dialog
+        admin_dialog,
+        places_dialog
     )
 
     dp.message.register(start, F.text == '/start')

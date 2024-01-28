@@ -18,5 +18,12 @@ class Admin(StatesGroup):
     ADMIN_EDIT = State()
 
 
+class Places(StatesGroup):
+    PLACES_MAIN = State()
+    PLACES_CATEGORY = State()
+    PLACES_SUBCATEGORY = State()
+    PLACES_PLACE = State()
+
+
 class Profile(StatesGroup):
     PROFILE_MAIN = State()

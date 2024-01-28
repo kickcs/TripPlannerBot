@@ -46,3 +46,39 @@ class PlaceORM:
         async with async_session_factory() as session:
             place = await session.execute(select(Place).where(Place.id == place_id))
             return place.scalars().first()
+
+    @staticmethod
+    async def get_category_places():
+        async with async_session_factory() as session:
+            result = await session.execute(select(Place.category).distinct())
+            return result.scalars().unique().all()
+
+    @staticmethod
+    async def get_subcategory_places(category: str):
+        async with async_session_factory() as session:
+            result = await session.execute(select(Place.subcategory).where(Place.category == category).distinct())
+            return result.scalars().unique().all()
+
+    @staticmethod
+    async def count_places_by_subcategory(subcategory_name):
+        async with async_session_factory() as session:
+            result = await session.execute(
+                select(func.count(Place.id)).where(Place.subcategory == subcategory_name)
+            )
+            count = result.scalar()
+            return count
+
+    @staticmethod
+    async def get_places_with_ordinal_ids(subcategory_name):
+        async with async_session_factory() as session:
+            query = select(
+                [
+                    func.row_number().over(partition_by=Place.subcategory, order_by=Place.id).label("ordinal_id"),
+                    Place.name,
+                    Place.description,
+                    Place.image_id
+                ]
+            ).where(Place.subcategory == subcategory_name)
+            result = await session.execute(query)
+            places = result.fetchall()
+            return places

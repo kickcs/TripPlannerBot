@@ -22,6 +22,11 @@ main_dialog = Dialog(
             state=states.Admin.ADMIN_MAIN,
             # when=
         ),
+        Start(
+            text=Const("Places"),
+            id="places",
+            state=states.Places.PLACES_MAIN
+        ),
         state=states.Main.MAIN,
         getter=getter
     ),
