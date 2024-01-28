@@ -32,7 +32,6 @@ class Place(Base):
     __tablename__ = "places"
 
     id: Mapped[int_pk]
-    city: Mapped[str] = mapped_column(default='Ташкент', nullable=False)
     category: Mapped[str]
     subcategory: Mapped[str]
     name: Mapped[str] = mapped_column()

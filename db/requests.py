@@ -69,16 +69,17 @@ class PlaceORM:
             return count
 
     @staticmethod
-    async def get_places_with_ordinal_ids(subcategory_name):
+    async def get_places_with_ordinal_ids(subcategory_name: str):
         async with async_session_factory() as session:
-            query = select(
-                [
-                    func.row_number().over(partition_by=Place.subcategory, order_by=Place.id).label("ordinal_id"),
-                    Place.name,
-                    Place.description,
-                    Place.image_id
-                ]
+            stmt = select(
+                func.row_number().over(
+                    partition_by=Place.subcategory,
+                    order_by=Place.id
+                ).label("ordinal_id"),
+                Place.name,
+                Place.description,
+                Place.image_id
             ).where(Place.subcategory == subcategory_name)
-            result = await session.execute(query)
+            result = await session.execute(stmt)
             places = result.fetchall()
             return places

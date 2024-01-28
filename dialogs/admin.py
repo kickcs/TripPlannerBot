@@ -178,6 +178,10 @@ admin_add_complete = Window(
     getter=getter
 )
 
+# admin_delete = Window(
+#     Const('Выберите место, которое хотите удалить'),
+# )
+
 admin_dialog = Dialog(
     admin_main_menu,
     admin_add_category,
