@@ -13,6 +13,7 @@ class Admin(StatesGroup):
     ADMIN_ADD_DESCRIPTION = State()
     ADMIN_ADD_ADDRESS = State()
     ADMIN_ADD_IMAGE = State()
+    ADMIN_ADD_COMPLETE = State()
     ADMIN_DELETE = State()
     ADMIN_EDIT = State()
 
