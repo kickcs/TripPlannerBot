@@ -1,6 +1,6 @@
 from sqlalchemy import select, delete, join, func
 from db.database import async_session_factory
-from db.models import User, Place, Bookmark
+from db.models import User, Place
 
 from typing import Optional
 
@@ -86,7 +86,7 @@ class PlaceORM:
 
     @staticmethod
     async def get_places_id_and_name():
-        async with async_session_factory() as session:  # Предполагается, что у вас уже есть async_session_factory
+        async with async_session_factory() as session:
             result = await session.execute(select(Place.id, Place.name))
             places = result.fetchall()
             return places
